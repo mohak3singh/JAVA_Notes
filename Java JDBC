@@ -1,0 +1,132 @@
+// FOR get data
+
+import java.sql.*;
+
+public class FetchStudent {
+
+    public static void main(String[] args) {
+
+        // jdbc api hai mysql db hai joki localhost pe hai 3306 port pe and
+        // spark db name hai
+        String url = "jdbc:mysql://localhost:3306/spark";
+        String username = "root";
+        String password = "Mohak3@sql";
+
+        String query = "select * from students";
+        // now this is string and mysql dosent understand this string query so
+        // now mysql driver will convert this string into your db
+
+        try{
+            // ab java itna smart hogya hai ki
+            // driver ko load karvane ki need nahi hai jaise krte the
+
+            // steps 1. load driver
+//            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // step 2. establish connection
+            Connection con = DriverManager.getConnection(url, username, password);
+
+            // step 3. prepare/create statement
+            Statement stmt = con.createStatement();
+
+            // step 4. execute
+            ResultSet rs = stmt.executeQuery(query);
+
+            // get result
+            System.out.println("id | name | age |");
+
+            while(rs.next()){
+
+                System.out.println(rs.getInt("id")+ " | "+
+                        rs.getString("name") + " | " +
+                        rs.getInt("age") + " | ");
+            }
+
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+}
+
+
+
+
+
+
+// For insert data
+
+import java.sql.*;
+
+public class InsertStudent {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/spark";
+        String username = "root";
+        String password = "Mohak3@sql";
+
+        String insertQuery = "insert into students(name, age) values (?, ?);";
+
+        try{
+            // ab java itna smart hogya hai ki
+            // driver ko load karvane ki need nahi hai jaise krte the
+
+            // steps 1. load driver
+            // Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // step 2. establish connection
+            Connection con = DriverManager.getConnection(url, username, password);
+
+            // step 3. prepare/create statement
+            PreparedStatement pr = con.prepareStatement(insertQuery);
+            pr.setString(1,"harsh");
+            pr.setInt(2, 29);
+            pr.executeUpdate();
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+
+
+
+
+
+
+// to delete
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+public class DeleteQuery {
+    public static void main(String[] args) {
+        String url = "jdbc:mysql://localhost:3306/spark";
+        String username = "root";
+        String password = "Mohak3@sql";
+
+        String deleteQuery = "Delete from students where id=?";
+
+        try{
+
+            // step 2. establish connection
+            Connection con = DriverManager.getConnection(url, username, password);
+
+            // step 3. prepare/create statement
+            PreparedStatement pr = con.prepareStatement(deleteQuery);
+            pr.setInt(1,3);
+            int update = pr.executeUpdate();
+            if(update > 0){
+                System.out.println("delete successfully");
+            }else{
+                System.out.println("not found");
+            }
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+}
+
+
