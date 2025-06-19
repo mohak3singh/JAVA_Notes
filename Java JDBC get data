@@ -1,0 +1,50 @@
+import java.sql.*;
+
+public class FetchStudent {
+
+    public static void main(String[] args) {
+
+        // jdbc api hai mysql db hai joki localhost pe hai 3306 port pe and
+        // spark db name hai
+        String url = "jdbc:mysql://localhost:3306/spark";
+        String username = "root";
+        String password = "Mohak3@sql";
+
+        String query = "select * from students";
+        // now this is string and mysql dosent understand this string query so
+        // now mysql driver will convert this string into your db
+
+        try{
+            // ab java itna smart hogya hai ki
+            // driver ko load karvane ki need nahi hai jaise krte the
+
+            // steps 1. load driver
+//            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // step 2. establish connection
+            Connection con = DriverManager.getConnection(url, username, password);
+
+            // step 3. prepare/create statement
+            Statement stmt = con.createStatement();
+
+            // step 4. execute
+            ResultSet rs = stmt.executeQuery(query);
+
+            // get result
+            System.out.println("id | name | age |");
+
+            while(rs.next()){
+
+                System.out.println(rs.getInt("id")+ " | "+
+                        rs.getString("name") + " | " +
+                        rs.getInt("age") + " | ");
+            }
+
+
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+}
+
